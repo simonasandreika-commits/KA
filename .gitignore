@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# TASM build outputs (regenerated from .asm)
+*.OBJ
+*.obj
+*.MAP
+*.map
+tasm/HELLOW.EXE
+tasm/UPPER.EXE

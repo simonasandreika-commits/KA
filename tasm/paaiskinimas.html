@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Didžiųjų raidžių programa</title>
+<style>
+:root{
+  --bg:#fafaf7; --card:#ffffff; --text:#1d1d1f; --muted:#666; --border:#e3e3de; --code:#f4f4ef;
+  --c1:#8a8a8a; --c2:#2f6fdf; --c3:#1f9d55; --c4:#d97706; --c5:#8b5cf6; --c6:#dc2626; --c7:#0891b2; --c8:#c026d3; --c9:#65a30d;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16161a; --card:#1f1f24; --text:#ececf0; --muted:#a0a0aa; --border:#33333b; --code:#26262d;
+    --c1:#9a9aa5; --c2:#6aa0ff; --c3:#4ade80; --c4:#fbbf24; --c5:#a78bfa; --c6:#f87171; --c7:#22d3ee; --c8:#e879f9; --c9:#a3e635;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16161a; --card:#1f1f24; --text:#ececf0; --muted:#a0a0aa; --border:#33333b; --code:#26262d;
+  --c1:#9a9aa5; --c2:#6aa0ff; --c3:#4ade80; --c4:#fbbf24; --c5:#a78bfa; --c6:#f87171; --c7:#22d3ee; --c8:#e879f9; --c9:#a3e635;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:32px 16px 80px}
+h1{font-size:28px;margin:0 0 4px}
+h2{font-size:22px;margin:48px 0 12px}
+.sub{color:var(--muted);margin:0 0 24px}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
+p code, li code, td code{background:var(--code);padding:1px 5px;border-radius:4px}
+.full{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;overflow-x:auto}
+.full pre{margin:0;line-height:1.55}
+.full .ln{display:block;padding:0 10px;border-left:4px solid transparent;white-space:pre}
+.full a{color:inherit;text-decoration:none}
+.full a:hover .ln{filter:brightness(0.95)}
+.block{background:var(--card);border:1px solid var(--border);border-left:6px solid var(--c);border-radius:12px;margin:20px 0;overflow:hidden}
+.block .head{padding:14px 18px;display:flex;gap:12px;align-items:center}
+.block .num{background:var(--c);color:#fff;font-weight:700;border-radius:50%;width:30px;height:30px;display:grid;place-items:center;flex:none}
+.block .head h3{margin:0;font-size:19px}
+.block .head .what{color:var(--muted);font-size:14px}
+.block pre.code{margin:0;background:var(--code);padding:12px 18px;overflow-x:auto;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.block .body{padding:4px 18px 14px}
+.lines{width:100%;border-collapse:collapse;margin:10px 0}
+.lines td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+.lines td:first-child{white-space:nowrap;width:1%}
+.lines td:first-child code{color:var(--c);font-weight:700;background:none;padding:0}
+.note{background:var(--code);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:15px}
+.note b{color:var(--c)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:999px;color:#fff;font-weight:600;font-size:14px}
+.flow i{color:var(--muted);font-style:normal}
+.regs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+.reg{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.reg code{font-size:18px;font-weight:700}
+.sim{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
+.sim input{width:100%;font:16px ui-monospace,Menlo,monospace;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--code);color:var(--text)}
+.sim table{width:100%;border-collapse:collapse;margin-top:14px;font-size:15px}
+.sim th,.sim td{padding:6px 8px;border-bottom:1px solid var(--border);text-align:left}
+.sim th{color:var(--muted);font-weight:600}
+.yes{color:var(--c6);font-weight:700}
+.res{margin-top:14px;font-size:18px}
+.res b{font-size:24px}
+.tw{overflow-x:auto}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Kaip veikia didžiųjų raidžių programa</h1>
+<p class="sub">Kodas suskirstytas į spalvotus blokus. Kiekvienas blokas paaiškintas atskirai, eilutė po eilutės.</p>
+
+<h2>Visa programa vienu žvilgsniu</h2>
+<div class="flow">
+  <span style="background:var(--c3)">1. Nuskaityk simbolį</span><i>→</i>
+  <span style="background:var(--c4)">2. Ar Enter? Jei taip – į 5</span><i>→</i>
+  <span style="background:var(--c5)">3. Ar tarp A ir Z?</span><i>→</i>
+  <span style="background:var(--c6)">4. Jei taip, +1. Grįžk į 1</span><i>→</i>
+  <span style="background:var(--c8)">5. Išvesk skaičių</span>
+</div>
+<p>Tai viskas. Programa yra ratas: skaito raidę, patikrina, jei reikia, prideda vienetą, ir vėl skaito. Paspaudus Enter, ratas baigiasi ir atspausdinamas rezultatas.</p>
+
+<div class="full"><pre id="full"></pre></div>
+<p class="sub" style="margin-top:8px">Paspausk ant bet kurios eilutės, kad nušoktum prie jos paaiškinimo.</p>
+
+<h2>Prieš pradedant: 4 dalykai, kuriuos reikia žinoti</h2>
+
+<div class="regs">
+  <div class="reg"><b>Registras</b><br>Tai maža „dėžutė“ procesoriaus viduje, į kurią galima įdėti vieną skaičių. Turi vardą, pvz. <code>al</code>, <code>bl</code>, <code>ah</code>, <code>dl</code>.</div>
+  <div class="reg"><b><code>mov</code></b><br>Įdeda reikšmę į dėžutę. <code>mov bl, 0</code> → į <code>bl</code> įdėk 0. Visada: <code>mov KUR, KĄ</code>.</div>
+  <div class="reg"><b><code>int 21h</code></b><br>„DOS'e, padaryk man kažką.“ Ką būtent – DOS'as žiūri į dėžutę <code>ah</code>.</div>
+  <div class="reg"><b>Raidės = skaičiai</b><br>Kompiuteris raides laiko skaičiais: <code>A</code>=65, <code>B</code>=66 … <code>Z</code>=90. Mažosios: <code>a</code>=97 … <code>z</code>=122. Enter = 13.</div>
+</div>
+
+<p><b>Kurias dėžutes naudojam šitoje programoje:</b></p>
+<table class="lines" style="--c:var(--c2)">
+<tr><td><code>al</code></td><td>Čia DOS'as įdeda simbolį, kurį ką tik nuskaitė iš klaviatūros.</td></tr>
+<tr><td><code>bl</code></td><td>Mūsų skaitliukas – kiek didžiųjų raidžių radom.</td></tr>
+<tr><td><code>ah</code></td><td>Komandos numeris DOS'ui: 1 = nuskaityk, 2 = išvesk, 4Ch = baik.</td></tr>
+<tr><td><code>dl</code></td><td>Simbolis, kurį norim išvesti į ekraną.</td></tr>
+<tr><td><code>bh</code></td><td>Laikina vieta – pasidedam vienetus, kad nepamestume.</td></tr>
+</table>
+
+<h2>Kodas blokais</h2>
+<div id="blocks"></div>
+
+<h2>Išbandyk pats</h2>
+<div class="sim" style="--c:var(--c6)">
+  <p style="margin-top:0">Įvesk tekstą, ir pamatysi, ką programa daro su kiekvienu simboliu (lyg būtum DOSBox'e).</p>
+  <input id="inp" value="Labas VAKARAS 5" autocomplete="off" spellcheck="false">
+  <div class="tw"><table><thead><tr><th>Simbolis</th><th>Kodas (al)</th><th>&lt; 65 (A)?</th><th>&gt; 90 (Z)?</th><th>Didžioji?</th><th>bl</th></tr></thead><tbody id="tb"></tbody></table></div>
+  <div class="res" id="res"></div>
+</div>
+
+</main>
+<script>
+const blocks = [
+ { c:'--c1', t:'Antraštė', w:'Privalomos eilutės – visada rašomos taip pat',
+   code:`; Programa: suskaiciuoja didziasias raides
+; Atliko: Vardas Pavarde
+
+.model small
+.stack 100h
+.code`,
+   lines:[
+    [';', 'Viskas po kabliataškio yra <b>komentaras</b>. Kompiuteris to neskaito – tai tik žmonėms.'],
+    ['.model small', 'Pasako TASM\'ui, kad programa maža. Rašoma kiekvienoje programoje, galvoti nereikia.'],
+    ['.stack 100h', 'Rezervuoja vietą <b>stekui</b> – atminties daliai, kur DOS\'as pasižymi, kur grįžti po <code>int 21h</code>. Irgi visada rašoma.'],
+    ['.code', 'Nuo čia prasideda tikros komandos.'],
+   ],
+   note:'Šito bloko <b>suprasti nereikia</b> – tai kaip šablonas, kurį nukopijuoji į kiekvieną programą.'},
+
+ { c:'--c2', t:'Pradžia', w:'Nustatom skaitliuką į 0',
+   code:`start:
+	mov bl, 0`,
+   lines:[
+    ['start:', 'Tai <b>žymė</b> – vardas vietai kode. Kaip skyriaus pavadinimas knygoje. Paskutinė eilutė <code>end start</code> pasako, kad programa prasideda čia.'],
+    ['mov bl, 0', 'Į dėžutę <code>bl</code> įdedam 0. <code>bl</code> bus mūsų <b>skaitliukas</b>: kiekvieną kartą radę didžiąją raidę, pridėsim 1.'],
+   ],
+   note:'Kodėl 0? Nes dar nieko neradom. Kaip skaičiuojant ant pirštų – pradedi nuo sugniaužto kumščio.'},
+
+ { c:'--c3', t:'Nuskaityk simbolį', w:'Laukiam, kol vartotojas paspaus klavišą',
+   code:`skaityti:
+	mov ah, 1
+	int 21h`,
+   lines:[
+    ['skaityti:', 'Žymė. Čia grįšim kiekvieną kartą, kai norėsim skaityti kitą raidę.'],
+    ['mov ah, 1', 'Į <code>ah</code> įdedam 1. Tai reiškia: „DOS\'e, kai iškviesiu tave, nuskaityk vieną simbolį.“'],
+    ['int 21h', 'Iškviečiam DOS\'ą. Programa <b>sustoja ir laukia</b>, kol paspausi klavišą. Paspaudus, to klavišo kodas atsiranda dėžutėje <code>al</code>. Pvz. paspaudus <code>L</code>, <code>al</code> = 76.'],
+   ],
+   note:'Tai tarsi klausimas: <b>„koks kitas simbolis?“</b> Atsakymas visada atsiduria <code>al</code>.'},
+
+ { c:'--c4', t:'Ar paspaustas Enter?', w:'Jei taip – baigiam skaityti',
+   code:`	cmp al, 13
+	je baigti`,
+   lines:[
+    ['cmp al, 13', '<code>cmp</code> = palyginti. Lyginam <code>al</code> su 13 (13 yra Enter klavišo kodas). Pats palyginimas nieko nedaro – tik „įsimena“ rezultatą.'],
+    ['je baigti', '<code>je</code> = <b>j</b>ump if <b>e</b>qual = „šok, jei lygu“. Jei <code>al</code> buvo 13 (Enter), šokam į žymę <code>baigti</code>. Jei ne – einam į kitą eilutę.'],
+   ],
+   note:'<code>cmp</code> + šuolis visada eina poroje. Tai assemblerio „<b>if</b>“: <i>jei al == 13, eik į baigti</i>.'},
+
+ { c:'--c5', t:'Ar tai didžioji raidė?', w:'Tikrinam, ar simbolis tarp A ir Z',
+   code:`	cmp al, 'A'
+	jb skaityti
+	cmp al, 'Z'
+	ja skaityti`,
+   lines:[
+    ["cmp al, 'A'", "Lyginam simbolį su <code>'A'</code> (kompiuteriui tai 65)."],
+    ['jb skaityti', '<code>jb</code> = <b>j</b>ump if <b>b</b>elow = „šok, jei mažiau“. Jei simbolis mažesnis už 65 (pvz. tarpas = 32, skaitmuo 5 = 53) – tai ne didžioji. Grįžtam skaityti kito, <b>nieko nepridėję</b>.'],
+    ["cmp al, 'Z'", "Lyginam simbolį su <code>'Z'</code> (kompiuteriui tai 90)."],
+    ['ja skaityti', '<code>ja</code> = <b>j</b>ump if <b>a</b>bove = „šok, jei daugiau“. Jei didesnis už 90 (pvz. mažoji <code>a</code> = 97) – ne didžioji. Grįžtam skaityti kito.'],
+   ],
+   note:'Įsivaizduok skaičių tiesę: <code>…32 (tarpas)…53 (5)… <b>[65 A … 90 Z]</b> …97 (a)…122 (z)</code>. Didžiosios yra <b>tik</b> laužtiniuose skliaustuose. Du patikrinimai išmeta viską, kas kairiau ir kas dešiniau.'},
+
+ { c:'--c6', t:'Suskaičiuok', w:'Radom didžiąją – pridedam 1 ir skaitom toliau',
+   code:`	inc bl
+	jmp skaityti`,
+   lines:[
+    ['inc bl', '<code>inc</code> = <b>inc</b>rease = padidinti 1. Jei atėjom iki čia, vadinasi nė vienas šuolis neįvyko – simbolis tarp A ir Z. Skaitliukas +1.'],
+    ['jmp skaityti', '<code>jmp</code> = šok <b>visada</b> (be jokios sąlygos). Grįžtam į <code>skaityti:</code> ir laukiam kito simbolio.'],
+   ],
+   note:'Čia užsidaro <b>ratas</b>: skaityti → patikrinti → (+1) → skaityti → … Ratas sukasi, kol paspausi Enter.'},
+
+ { c:'--c7', t:'Nauja eilutė', w:'Kad atsakymas būtų po įvestu tekstu',
+   code:`baigti:
+	mov ah, 2
+	mov dl, 10
+	int 21h`,
+   lines:[
+    ['baigti:', 'Žymė. Čia atsiduriam paspaudus Enter (iš 4 bloko).'],
+    ['mov ah, 2', 'Į <code>ah</code> įdedam 2. Tai reiškia: „DOS\'e, išvesk vieną simbolį, kuris yra <code>dl</code>.“'],
+    ['mov dl, 10', 'Į <code>dl</code> įdedam 10 – tai naujos eilutės simbolis.'],
+    ['int 21h', 'Iškviečiam DOS\'ą – kursorius nušoka žemyn. Be šito skaičius atsirastų ant įvesto teksto.'],
+   ],
+   note:'Palygink su 3 bloku: ten <code>ah = 1</code> (<b>skaityti</b> į al), čia <code>ah = 2</code> (<b>rašyti</b> iš dl).'},
+
+ { c:'--c8', t:'Išskaidyk skaičių į skaitmenis', w:'Sunkiausia dalis – kodėl reikia dalinti iš 10',
+   code:`	mov al, bl
+	mov ah, 0
+	mov bl, 10
+	div bl
+	mov bh, ah`,
+   lines:[
+    ['mov al, bl', 'Skaitliuką (pvz. 12) perkeliam į <code>al</code>, nes dalyba dirba būtent su <code>al</code>/<code>ah</code>.'],
+    ['mov ah, 0', 'Išvalom <code>ah</code>. Dalyba dalina <code>ax</code>, o <code>ax</code> = <code>ah</code> ir <code>al</code> kartu. Jei <code>ah</code> būtų šiukšlės, dalyba būtų neteisinga.'],
+    ['mov bl, 10', 'Įdedam 10 į <code>bl</code> – iš jo dalinsim. (Skaitliuko nebereikia, jis jau <code>al</code>.)'],
+    ['div bl', 'Daliname iš 10. Rezultatas: <code>al</code> = <b>dešimtys</b>, <code>ah</code> = <b>vienetai</b> (liekana). 12 ÷ 10 = 1, liekana 2 → <code>al</code>=1, <code>ah</code>=2.'],
+    ['mov bh, ah', 'Vienetus pasidedam į <code>bh</code>, nes kitame bloke į <code>ah</code> įrašysim 2 ir vienetai prapultų.'],
+   ],
+   note:'<b>Kodėl iš viso reikia dalinti?</b> Kompiuteriui 12 yra <i>vienas</i> skaičius. Bet ekrane reikia parodyti <i>du</i> simbolius: <code>1</code> ir <code>2</code>. Dalyba iš 10 juos atskiria: 12 → 1 ir 2. 7 → 0 ir 7. 35 → 3 ir 5.'},
+
+ { c:'--c5', t:'Išvesk dešimtis', w:'Tik jei jų yra',
+   code:`	mov ah, 2
+	cmp al, 0
+	je vienetai
+	mov dl, al
+	add dl, '0'
+	int 21h`,
+   lines:[
+    ['mov ah, 2', 'Vėl „išvesk vieną simbolį iš <code>dl</code>“.'],
+    ['cmp al, 0', 'Ar dešimtys lygios 0? (t.y. ar skaičius mažesnis už 10)'],
+    ['je vienetai', 'Jei taip – dešimčių neišvedam, šokam į vienetus. Kitaip vietoj <code>5</code> matytum <code>05</code>.'],
+    ['mov dl, al', 'Dešimtis dedam į <code>dl</code>, kad DOS\'as galėtų jas išvesti.'],
+    ["add dl, '0'", "<code>add</code> = pridėti. Pridedam <code>'0'</code> (= 48). <b>Kodėl?</b> Skaičius 1 ir simbolis <code>'1'</code> – ne tas pats! Ekrane simbolis <code>'1'</code> turi kodą 49. Taigi 1 + 48 = 49 = <code>'1'</code>."],
+    ['int 21h', 'Išvedam dešimčių skaitmenį į ekraną.'],
+   ],
+   note:'<b>Skaitmuo → simbolis:</b> 0+48=48=<code>\'0\'</code>, 1+48=49=<code>\'1\'</code>, … 9+48=57=<code>\'9\'</code>. Visada tiesiog <code>+ \'0\'</code>.'},
+
+ { c:'--c9', t:'Išvesk vienetus', w:'Visada',
+   code:`vienetai:
+	mov dl, bh
+	add dl, '0'
+	int 21h`,
+   lines:[
+    ['vienetai:', 'Žymė – čia ateinam arba iš eilės, arba nušokę iš <code>je vienetai</code>.'],
+    ['mov dl, bh', 'Vienetus, kuriuos pasidėjom į <code>bh</code>, perkeliam į <code>dl</code>.'],
+    ["add dl, '0'", 'Skaičių paverčiam simboliu (+48), kaip ir su dešimtimis.'],
+    ['int 21h', 'Išvedam. <code>ah</code> vis dar 2, todėl iš naujo nustatyti nereikia.'],
+   ],
+   note:'Vienetai išvedami <b>visada</b> – net jei radom 0 raidžių, ekrane bus <code>0</code>.'},
+
+ { c:'--c1', t:'Pabaiga', w:'Grąžinam valdymą DOS\'ui',
+   code:`	mov ah, 4Ch
+	int 21h
+
+end start`,
+   lines:[
+    ['mov ah, 4Ch', '4Ch reiškia „baik programą“.'],
+    ['int 21h', 'DOS\'as baigia programą. <b>Be šito</b> procesorius vykdytų atmintyje esančias šiukšles ir DOSBox gali pakibti.'],
+    ['end start', 'Failo pabaiga. <code>start</code> – nuo kurios žymės pradėti.'],
+   ],
+   note:'Kaip ir antraštė – visada rašoma taip pat.'},
+];
+
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+// visa programa, nuspalvinta pagal blokus
+let full = '';
+blocks.forEach((b,i) => {
+  b.code.split('\n').forEach(l => {
+    const bg = `color-mix(in srgb, var(${b.c}) 14%, transparent)`;
+    full += `<a href="#b${i}"><span class="ln" style="border-left-color:var(${b.c});background:${bg}">${esc(l.replace(/\t/g,'    ')) || ' '}</span></a>`;
+  });
+  if (i < blocks.length - 1) full += `<span class="ln"> </span>`;
+});
+document.getElementById('full').innerHTML = full;
+
+// blokai
+document.getElementById('blocks').innerHTML = blocks.map((b,i) => `
+  <section class="block" id="b${i}" style="--c:var(${b.c})">
+    <div class="head"><div class="num">${i+1}</div><div><h3>${b.t}</h3><div class="what">${b.w}</div></div></div>
+    <pre class="code">${esc(b.code.replace(/\t/g,'    '))}</pre>
+    <div class="body">
+      <table class="lines">${b.lines.map(([c,e]) => `<tr><td><code>${esc(c)}</code></td><td>${e}</td></tr>`).join('')}</table>
+      <div class="note">💡 ${b.note}</div>
+    </div>
+  </section>`).join('');
+
+// simuliatorius
+function run(){
+  const s = document.getElementById('inp').value;
+  let bl = 0, rows = '';
+  for (const ch of s){
+    const code = ch.charCodeAt(0);
+    if (code > 127) { rows += `<tr><td colspan="6" style="color:var(--muted)">„${esc(ch)}“ – ne ASCII simbolis, DOS'e jo nebus</td></tr>`; continue; }
+    const below = code < 65, above = !below && code > 90, up = !below && !above;
+    if (up) bl++;
+    rows += `<tr><td><code>${ch === ' ' ? '(tarpas)' : esc(ch)}</code></td><td>${code}</td><td>${below?'taip → kitas':'ne'}</td><td>${below?'–':above?'taip → kitas':'ne'}</td><td class="${up?'yes':''}">${up?'TAIP, bl+1':'ne'}</td><td>${bl}</td></tr>`;
+  }
+  rows += `<tr><td><code>Enter</code></td><td>13</td><td colspan="4">al = 13 → šokam į <code>baigti</code></td></tr>`;
+  document.getElementById('tb').innerHTML = rows;
+  const d = Math.floor(bl/10), v = bl%10;
+  document.getElementById('res').innerHTML =
+    `div: ${bl} ÷ 10 → dešimtys (al) = ${d}, vienetai (ah) = ${v}. ${d===0?'Dešimtys = 0, jų nerodom.':''}<br>Ekrane: <b>${bl}</b>`;
+}
+document.getElementById('inp').addEventListener('input', run);
+run();
+</script>
+</body>
+</html>
