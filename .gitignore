@@ -7,4 +7,5 @@
 *.MAP
 *.map
 tasm/HELLOW.EXE
-tasm/UPPER.EXE
+tasm/uzd*/*.EXE
+tasm/uzd*/REZ.TXT
