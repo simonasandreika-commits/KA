@@ -69,9 +69,30 @@ vardas_baigtas:
 	int 21h
 	jmp parametras
 neatidare:
-	mov ah, 9
-	mov dx, offset klaida
-	int 21h
+	push si
+	mov si, dx
+
+zodzio_simbolis:
+	mov al, [si]
+	cmp al, 0
+	je zodis_baigtas
+	inc si
+	and al, 11011111b
+	cmp al, 'A'
+	jb ne_raide
+	cmp al, 'Z'
+	ja ne_raide
+	sub al, 'A'
+	mov bl, al
+	mov bh, 0
+	shl bx, 1
+	inc kiek[bx]
+
+ne_raide:
+	jmp zodzio_simbolis
+
+zodis_baigtas:
+	pop si
 	jmp parametras
 
 rodyti_pagalba:
